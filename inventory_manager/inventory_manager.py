@@ -13,66 +13,69 @@ class State(rx.State):
 ###-------------------------###
 
 def character_scheet():
-    pass
+    return rx.flex(
+        rx.box("Character scheet", p=4, bg="red.200"),
+        direction="column",
+        flex=1,
+    )
 
 ###-----------------###
 ### WEAPONS SECTION ###
 ###-----------------###
 
 def weapons():
-    pass
+    return rx.box("Weapons", p=4, bg="green.200")
 
 ###---------------###
 ### ARMOR SECTION ###
 ###---------------###
 
 def armor():
-    pass
+    return rx.box("Armor", p=4, bg="green.300")
 
 ###---------------------###
 ### CONSUMABLES SECTION ###
 ###---------------------###
 
 def consumables():
-    pass
+    return rx.box("Consumables", p=4, bg="green.400")
 
 ###----------------###
 ### BASICS SECTION ###
 ###----------------###
 
 def basics():
-    pass
+    return rx.box("Basics", p=4, bg="blue.200")
 
 ###---------------------###
 ### INFORMATION SECTION ###
 ###---------------------###
 
 def information():
-    pass
+    return rx.box("Information", p=4, bg="blue.300")
 
 
 
 def index() -> rx.Component:
     # Welcome Page (Index)
-    return rx.container(
-        rx.color_mode.button(position="top-right"),
-        rx.vstack(
-            rx.heading("Welcome to Reflex!", size="9"),
-            rx.text(
-                "Get started by editing ",
-                rx.code(f"{config.app_name}/{config.app_name}.py"),
-                size="5",
-            ),
-            rx.link(
-                rx.button("Check out our docs!"),
-                href="https://reflex.dev/docs/getting-started/introduction/",
-                is_external=True,
-            ),
-            spacing="5",
-            align="start",
-            justify="center",
-            min_height="85vh",
+    return rx.flex(
+        character_scheet(),
+        rx.flex(
+            weapons(),
+            armor(),
+            consumables(),
+            direction="column",
+            flex=1,
         ),
+        rx.flex(
+            basics(),
+            information(),
+            direction="column",
+            flex=1,
+        ),
+        direction="row",
+        gap=2,
+        height="100vh",
     )
 
 
