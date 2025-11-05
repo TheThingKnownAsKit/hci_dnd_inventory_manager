@@ -8,6 +8,49 @@ from rxconfig import config
 class State(rx.State):
     """The app state."""
 
+###-------------------------###
+### CHARACTER SHEET SECTION ###
+###-------------------------###
+
+def character_scheet():
+    pass
+
+###-----------------###
+### WEAPONS SECTION ###
+###-----------------###
+
+def weapons():
+    pass
+
+###---------------###
+### ARMOR SECTION ###
+###---------------###
+
+def armor():
+    pass
+
+###---------------------###
+### CONSUMABLES SECTION ###
+###---------------------###
+
+def consumables():
+    pass
+
+###----------------###
+### BASICS SECTION ###
+###----------------###
+
+def basics():
+    pass
+
+###---------------------###
+### INFORMATION SECTION ###
+###---------------------###
+
+def information():
+    pass
+
+
 
 def index() -> rx.Component:
     # Welcome Page (Index)
@@ -26,6 +69,7 @@ def index() -> rx.Component:
                 is_external=True,
             ),
             spacing="5",
+            align="start",
             justify="center",
             min_height="85vh",
         ),
