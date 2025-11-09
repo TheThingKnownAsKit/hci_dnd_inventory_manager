@@ -1,5 +1,5 @@
 import reflex as rx
-from inventory_manager.state import AppState, Stat
+from inventory_manager.state import AppState, Stat, AddCustomItemState, AddCustomWeaponState, AddCustomArmorState
 
 
 def _container_header(title: str, color: str) -> rx.Component:
@@ -16,11 +16,21 @@ data_map = {
     "BASIC": AppState.basicData,
 }
 
+custom_state_map = {
+    "WEAPONS": AddCustomWeaponState,
+    "ARMOR": AddCustomArmorState,
+    "CONSUMABLES": AddCustomItemState,
+    "BASIC": AddCustomItemState,
+}
+
+def _custom_item_creation(title: str):
+    pass
+
 
 # This is where the Add Item button goes
 def _item_container_subheader(title: str) -> rx.Component:
     return rx.dialog.root(
-        rx.dialog.trigger(
+        rx.dialog.trigger(  # This is the add item button
             rx.el.button(
                 rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
                 "Add Item",
@@ -28,22 +38,119 @@ def _item_container_subheader(title: str) -> rx.Component:
             ),
             class_name="p-2 border-b-2 border-black bg-gray-200",
         ),
-        rx.dialog.content(
+        rx.dialog.content(  # This is the add items dialog popup
             rx.dialog.title(f"Add {title} Item"),
-            rx.dialog.root(         # This is where custom items are
+            rx.dialog.root( # This is the add custom items dialog popup
                 rx.dialog.trigger(
                     rx.el.button(f"Add Custom {title}",
                         class_name="flex items-center text-sm font-semibold text-gray-700",
                     ),
                     class_name="p-2 border-b-2 border-black bg-gray-200",
                 ),
-                rx.dialog.content(f"Add Custom {title}"),
+                rx.dialog.content(
+                    f"Add Custom {title}",
+                    rx.el.div(
+                        rx.cond(    # Add a custom weapon
+                            (title == "WEAPONS"),
+                            rx.form(
+                                rx.el.label("Name", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_name,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Martial? True or False", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_martial,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Damage", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_damage,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Damage Type", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_damageType,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Rarity", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_rarity,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Tags", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_tags,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Weight", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_weight,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Value", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_value,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Description", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomWeaponState.set_description,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.div(  # wrap Quantity label + input in a column
+                                    rx.el.label("Quantity", class_name="text-sm font-semibold"),
+                                    rx.el.input(
+                                        default_value=1,  # type: ignore
+                                        on_change=AddCustomWeaponState.set_quantity,  # type: ignore
+                                        class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
+                                        type="number",
+                                    ),
+                                    class_name="flex flex-col mb-2",  # flex-col to stack vertically
+                                ),
+                                rx.button("Add Weapon", type="submit"),
+                                on_submit=lambda: AddCustomWeaponState.create_weapon,
+                                class_name="flex-grow",
+                            ),
+                        ),
+                        rx.cond(    # Add a custom armor
+                            (title == "ARMOR"),
+                            rx.el.div(
+                                rx.el.label("Name", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    default_value=AppState.character_name,
+                                    on_change=AppState.set_character_name,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                class_name="flex-grow",
+                            ),
+                        ),
+                        rx.cond(    # Add a custom consumable or basic item
+                            (title == "BASIC" or title == "CONSUMABLES"),
+                            rx.el.div(
+                                rx.el.label("Name", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    default_value=AppState.character_name,
+                                    on_change=AppState.set_character_name,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                class_name="flex-grow",
+                            ),
+                        ),
+                    ),
+                ),
+                open=AppState.dialog_open,
+                on_open_change=AppState.set_dialog_open, # type: ignore
             ),
-            rx.scroll_area(
+            rx.scroll_area( # This is the list of premade items to add
                 rx.foreach(
-                    data_map[title],  # Your state list here
+                    data_map[title],
                     lambda item: rx.el.div(
-                        rx.text(item["name"], class_name="font-bold text-black text-sm tracking-wide"),
+                        rx.el.button(
+                            rx.text(item["name"]),
+                            class_name="font-bold text-black text-sm tracking-wide",
+                            on_click=AppState.add_item_to_inv(title, item), # type: ignore
+                        ),
                         class_name="p-2 border-b border-gray-300"
                     )
                 ),
@@ -93,7 +200,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Name", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_name,
-                        on_change=AppState.set_character_name,
+                        on_change=AppState.set_character_name, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     ),
                     class_name="flex flex-col flex-[5]",
