@@ -16,7 +16,20 @@ data_map = {
     "BASIC": AppState.basicData,
 }
 
-def handle_custom_item():
+def get_current_inv(): return {
+    "WEAPONS": AppState.weaponInv,
+    "ARMOR": AppState.armorInv,
+    "CONSUMABLES": AppState.consumableInv,
+    "BASIC": AppState.basicInv,
+}
+custom_state_map = {
+    "WEAPONS": AddCustomWeaponState,
+    "ARMOR": AddCustomArmorState,
+    "CONSUMABLES": AddCustomItemState,
+    "BASIC": AddCustomItemState,
+}
+
+def _custom_item_creation(title: str):
     pass
 
 
@@ -223,7 +236,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                         rx.el.button(
                             rx.text(item["name"]),
                             class_name="font-bold text-black text-sm tracking-wide",
-                            on_click=AppState.add_item_to_inv(title, item), # type: ignore
+                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
                         ),
                         class_name="p-2 border-b border-gray-300"
                     )
@@ -238,8 +251,41 @@ def inventory_container(title: str, color: str) -> rx.Component:
     return rx.el.div(
         _container_header(title, color),
         _item_container_subheader(title=title),
-        rx.el.div(class_name="flex-grow p-4 bg-yellow-50"),
-        class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
+        rx.scroll_area( # This is the list of premade items to add
+            rx.el.div(    
+                rx.foreach(
+                    get_current_inv()[title],
+                    lambda item: rx.el.div(
+                        rx.el.button(
+                            rx.box(width="50px", height="50px", aspect_ratio=1, background="center/cover url('/potion.jpg')"),
+                            rx.text(item["name"],
+                                    style={
+                                        "width": "100%",
+                                        "fontSize": "calc(0.2 * 50px)",
+                                        "whiteSpace": "normal",
+                                        "overflow": "visible",
+                                        "textAlign": "center",
+                                        "wordBreak": "break-word"
+                                    }),
+                            class_name="flex flex-col justify-end items-center flex-grow p-1 bg-gray-300 border-2 border-black rounded font-bold text-black tracking-wide",
+                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
+                        ),
+                        class_name="p-2 border-b border-gray-300"
+                    )
+                    
+                ),
+                class_name="flex flex-wrap gap-2 justify-start items-start p-4 bg-yellow-50"
+            ),
+             class_name="flex-grow p-4 bg-yellow-50",
+
+        ),
+        style={
+            "minHeight": "150px",
+            "maxHeight": "500px",
+            "display": "flex",
+            "flexDirection": "column",
+        },
+    class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
     )
 
 
