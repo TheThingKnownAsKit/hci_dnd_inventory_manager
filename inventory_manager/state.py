@@ -15,10 +15,10 @@ class AppState(rx.State):
     character_race: str = "CHARACTER RACE"
     level: int = 1
     stats: list[Stat] = [
-        {"name": "Strength", "value": 10, "color": "red"},
-        {"name": "Dexterity", "value": 12, "color": "orange"},
-        {"name": "Constitution", "value": 14, "color": "yellow"},
-        {"name": "Intelligence", "value": 8, "color": "green"},
-        {"name": "Wisdom", "value": 15, "color": "blue"},
-        {"name": "Charisma", "value": 16, "color": "purple"},
+        {"name": "STR", "value": 10, "color": "red"},
+        {"name": "DEX", "value": 12, "color": "orange"},
+        {"name": "CON", "value": 14, "color": "yellow"},
+        {"name": "INT", "value": 8, "color": "green"},
+        {"name": "WIS", "value": 15, "color": "blue"},
+        {"name": "CHA", "value": 16, "color": "purple"},
     ]

@@ -42,7 +42,7 @@ def stat_display(stat: Stat) -> rx.Component:
     return rx.el.div(
         rx.el.div(
             stat["name"],
-            class_name="absolute top-0 w-full text-center text-sm font-semibold bg-gray-200 border-b border-black py-0.5",
+            class_name="absolute top-0 w-full text-center text-base font-semibold bg-gray-200 border-b border-black py-0.5",
         ),
         rx.el.div(
             stat["value"],
