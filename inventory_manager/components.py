@@ -11,19 +11,17 @@ def _container_header(title: str, color: str) -> rx.Component:
 
 # This is where the Add Item button goes
 def _item_container_subheader() -> rx.Component:
-    return rx.el.div(
-        rx.dialog.root(
-            rx.dialog.trigger(
-                rx.el.button(
-                    rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
-                    "Add Item",
-                    class_name="flex items-center text-sm font-semibold text-gray-700",
-                ),
-                class_name="p-2 border-b-2 border-black bg-gray-200",
+    return rx.dialog.root(
+        rx.dialog.trigger(
+            rx.el.button(
+                rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
+                "Add Item",
+                class_name="flex items-center text-sm font-semibold text-gray-700",
             ),
-            rx.dialog.content(
-                rx.dialog.title("Add New Item"),
-            )
+            class_name="p-2 border-b-2 border-black bg-gray-200",
+        ),
+        rx.dialog.content(
+            rx.dialog.title("Add New Item"),
         )
     )
 
