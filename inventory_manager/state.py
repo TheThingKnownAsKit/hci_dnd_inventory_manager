@@ -72,12 +72,12 @@ class AppState(rx.State):
     character_race: str = "CHARACTER RACE"
     level: int = 1
     stats: list[Stat] = [
-        {"name": "STR", "value": 10, "color": "red"},
-        {"name": "DEX", "value": 12, "color": "orange"},
-        {"name": "CON", "value": 14, "color": "yellow"},
-        {"name": "INT", "value": 8, "color": "green"},
-        {"name": "WIS", "value": 15, "color": "blue"},
-        {"name": "CHA", "value": 16, "color": "purple"},
+        {"name": "STR", "value": 10, "color": "color1"},
+        {"name": "DEX", "value": 12, "color": "color2"},
+        {"name": "CON", "value": 14, "color": "color1"},
+        {"name": "INT", "value": 8, "color": "color2"},
+        {"name": "WIS", "value": 15, "color": "color1"},
+        {"name": "CHA", "value": 16, "color": "color2"},
     ]
 
     consumableData = [
