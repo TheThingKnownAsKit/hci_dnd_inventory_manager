@@ -29,9 +29,6 @@ custom_state_map = {
     "BASIC": AddCustomItemState,
 }
 
-def _custom_item_creation(title: str):
-    pass
-
 
 # This is where the Add Item button goes
 def _item_container_subheader(title: str) -> rx.Component:
@@ -300,7 +297,7 @@ def character_sheet() -> rx.Component:
             ),
             rx.el.input(
                 value=stat["value"],
-                on_change=lambda value, stat_name=stat["name"]: AppState.update_stat(stat_name, value),
+                on_change=lambda value, stat_name=stat["name"]: AppState.update_stat(stat_name, value), # type: ignore
                 class_name="absolute bottom-2 w-full text-center text-xl font-bold text-white bg-transparent border-none focus:outline-none",
                 type="number",
             ),
@@ -328,8 +325,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("Level", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.level.to_string(),
-                        on_change=AppState.set_level,
+                        default_value=AppState.level.to_string(), # type: ignore
+                        on_change=AppState.set_level, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -344,7 +341,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Class", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_class,
-                        on_change=AppState.set_character_class,
+                        on_change=AppState.set_character_class, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     )
                 ),
@@ -352,7 +349,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Subclass", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_subclass,
-                        on_change=AppState.set_character_subclass,
+                        on_change=AppState.set_character_subclass, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     ),
                 ),
@@ -365,7 +362,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Race", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_race,
-                        on_change=AppState.set_character_race,
+                        on_change=AppState.set_character_race, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     )
                 ),
@@ -373,7 +370,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Subrace", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_subrace,
-                        on_change=AppState.set_character_subrace,
+                        on_change=AppState.set_character_subrace, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     ),
                 ),
@@ -394,8 +391,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("PP", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.character_pp.to_string(),
-                        on_change=AppState.set_character_pp,
+                        default_value=AppState.character_pp.to_string(), # type: ignore
+                        on_change=AppState.set_character_pp, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -404,8 +401,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("GP", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.character_gp.to_string(),
-                        on_change=AppState.set_character_gp,
+                        default_value=AppState.character_gp.to_string(), # type: ignore
+                        on_change=AppState.set_character_gp, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -414,8 +411,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("EP", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.character_ep.to_string(),
-                        on_change=AppState.set_character_ep,
+                        default_value=AppState.character_ep.to_string(), # type: ignore
+                        on_change=AppState.set_character_ep, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -424,8 +421,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("SP", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.character_sp.to_string(),
-                        on_change=AppState.set_character_sp,
+                        default_value=AppState.character_sp.to_string(), # type: ignore
+                        on_change=AppState.set_character_sp, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -434,8 +431,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("CP", class_name="text-base font-semibold self-start"),
                     rx.el.input(
-                        default_value=AppState.character_cp.to_string(),
-                        on_change=AppState.set_character_cp,
+                        default_value=AppState.character_cp.to_string(), # type: ignore
+                        on_change=AppState.set_character_cp, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
