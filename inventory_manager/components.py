@@ -9,21 +9,46 @@ def _container_header(title: str, color: str) -> rx.Component:
     )
 
 
-def _item_container_subheader() -> rx.Component:
-    return rx.el.div(
-        rx.el.button(
-            rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
-            "Add Item",
-            class_name="flex items-center text-sm font-semibold text-gray-700",
+# This is where the Add Item button goes
+def _item_container_subheader(title: str) -> rx.Component:
+    return rx.dialog.root(
+        rx.dialog.trigger(
+            rx.el.button(
+                rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
+                "Add Item",
+                class_name="flex items-center text-sm font-semibold text-gray-700",
+            ),
+            class_name="p-2 border-b-2 border-black bg-gray-200",
         ),
-        class_name="p-2 border-b-2 border-black bg-gray-200",
+        rx.dialog.content(
+            rx.dialog.title(f"Add {title} Item"),
+            rx.dialog.root(         # This is where custom items are
+                rx.dialog.trigger(
+                    rx.el.button(f"Add Custom {title}",
+                        class_name="flex items-center text-sm font-semibold text-gray-700",
+                    ),
+                    class_name="p-2 border-b-2 border-black bg-gray-200",
+                ),
+                rx.dialog.content(f"Add Custom {title}"),
+            ),
+        ),
+        rx.scroll_area(
+            rx.foreach(
+                AppState.weaponData,  # Your state list here
+                lambda item: rx.el.div(
+                    item,
+                    class_name="p-2 border-b border-gray-300"
+                )
+            ),
+            class_name="flex-grow p-4 bg-yellow-50"
+        ),
     )
 
 
 def inventory_container(title: str, color: str) -> rx.Component:
     return rx.el.div(
         _container_header(title, color),
-        _item_container_subheader(),
+        _item_container_subheader(title=title),
         rx.el.div(class_name="flex-grow p-4 bg-yellow-50"),
         class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
     )
@@ -42,7 +67,7 @@ def stat_display(stat: Stat) -> rx.Component:
     return rx.el.div(
         rx.el.div(
             stat["name"],
-            class_name="absolute top-0 w-full text-center text-sm font-semibold bg-gray-200 border-b border-black py-0.5",
+            class_name="absolute top-0 w-full text-center text-base font-semibold bg-gray-200 border-b border-black py-0.5",
         ),
         rx.el.div(
             stat["value"],

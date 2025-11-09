@@ -9,7 +9,7 @@ def index() -> rx.Component:
             rx.el.div(
                 inventory_container("WEAPONS", "bg-blue-400"),
                 inventory_container("ARMOR", "bg-red-400"),
-                inventory_container("CONSUMABLES", "bg-green-400"),
+                inventory_container("CONSUMABLES", "bg-green-600"),
                 class_name="w-1/3 p-2 flex flex-col gap-4",
             ),
             rx.el.div(
