@@ -41,9 +41,13 @@ def _item_container_subheader(title: str) -> rx.Component:
             ),
             rx.scroll_area(
                 rx.foreach(
-                    data_map[title],  # Your state list here
+                    data_map[title],
                     lambda item: rx.el.div(
-                        rx.text(item["name"], class_name="font-bold text-black text-sm tracking-wide"),
+                        rx.el.button(
+                            rx.text(item["name"]),
+                            class_name="font-bold text-black text-sm tracking-wide",
+                            on_click=AppState.add_item_to_inv(title, item),
+                        ),
                         class_name="p-2 border-b border-gray-300"
                     )
                 ),

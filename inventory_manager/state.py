@@ -54,6 +54,11 @@ class AppState(rx.State):
         {"name": "CHA", "value": 16, "color": "purple"},
     ]
 
+    consumableInv: list[Item] = []
+    basicInv: list[Item] = []
+    weaponInv: list[Weapon] = []
+    armorInv: list[Armor] = []
+
     consumableData: list[Item] = [
         {
             "name": "Potion of Healing",
@@ -138,6 +143,16 @@ class AppState(rx.State):
         },
     ]
 
+    def add_item_to_inv(self, title: str, item):
+        """Append an item to the specified category."""
+        if title == "WEAPONS":
+            self.weaponInv.append(item)
+        elif title == "ARMOR":
+            self.armorInv.append(item)
+        elif title == "CONSUMABLES":
+            self.consumableInv.append(item)
+        elif title == "BASIC":
+            self.basicInv.append(item)
 
 class AddCustomItemState(rx.State):
     """The current state of the user trying to add a custom item and all the fields to keep track of."""
