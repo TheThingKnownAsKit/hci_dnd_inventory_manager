@@ -8,13 +8,15 @@ from rxconfig import config
 class State(rx.State):
     """The app state."""
 
+
+
 ###-------------------------###
 ### CHARACTER SHEET SECTION ###
 ###-------------------------###
 
 def character_scheet():
     return rx.flex(
-        rx.box("Character scheet", p=4, bg="red.200"),
+        rx.box("Character sheet", p=4, bg="red.200"),
         direction="column",
         flex=1,
     )
