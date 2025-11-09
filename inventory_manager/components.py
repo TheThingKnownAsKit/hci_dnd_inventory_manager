@@ -22,7 +22,7 @@ def _item_container_subheader(title: str) -> rx.Component:
         ),
         rx.dialog.content(
             rx.dialog.title(f"Add {title} Item"),
-            rx.dialog.root(
+            rx.dialog.root(         # This is where custom items are
                 rx.dialog.trigger(
                     rx.el.button(f"Add Custom {title}",
                         class_name="flex items-center text-sm font-semibold text-gray-700",
@@ -31,6 +31,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                 ),
                 rx.dialog.content(f"Add Custom {title}"),
             ),
+
         ),
     )
 
