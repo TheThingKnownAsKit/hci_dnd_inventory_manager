@@ -98,6 +98,16 @@ def _item_container_subheader(title: str) -> rx.Component:
                                     on_change=AddCustomWeaponState.set_description,  # type: ignore
                                     class_name="w-full p-2 border-2 border-black bg-gray-200",
                                 ),
+                                rx.el.div(  # wrap Quantity label + input in a column
+                                    rx.el.label("Quantity", class_name="text-sm font-semibold"),
+                                    rx.el.input(
+                                        default_value=1,  # type: ignore
+                                        on_change=AddCustomWeaponState.set_quantity,  # type: ignore
+                                        class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
+                                        type="number",
+                                    ),
+                                    class_name="flex flex-col mb-2",  # flex-col to stack vertically
+                                ),
                                 rx.button("Add Weapon", type="submit"),
                                 on_submit=lambda: AddCustomWeaponState.create_weapon,
                                 class_name="flex-grow",
@@ -130,7 +140,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                     ),
                 ),
                 open=AppState.dialog_open,
-                on_open_change=AppState.set_dialog_open,
+                on_open_change=AppState.set_dialog_open, # type: ignore
             ),
             rx.scroll_area( # This is the list of premade items to add
                 rx.foreach(

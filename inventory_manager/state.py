@@ -14,6 +14,7 @@ class Item(TypedDict):
     value: NotRequired[str]
     category: NotRequired[str]
     description: NotRequired[str]
+    quantity: int
 
 
 class Weapon(TypedDict):
@@ -26,6 +27,7 @@ class Weapon(TypedDict):
     weight: NotRequired[str]
     value: NotRequired[str]
     description: NotRequired[str]
+    quantity: int
 
 
 class Armor(TypedDict):
@@ -36,6 +38,7 @@ class Armor(TypedDict):
     weight: NotRequired[str]
     value: NotRequired[str]
     description: NotRequired[str]
+    quantity: int
 
 
 
@@ -68,6 +71,7 @@ class AppState(rx.State):
             "value": "50 GP",
             "category": "potion",
             "description": "You regain 2d4+2 hit points when you drink this potion. Drinking or administering a potion takes an action.",
+            "quantity": 3,
         },
         {
             "name": "Arrow",
@@ -76,6 +80,7 @@ class AppState(rx.State):
             "value": "10 CP",
             "category": "ammunition",
             "description": "You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack. At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield.",
+            "quantity": 20,
         },
     ]
 
@@ -87,6 +92,7 @@ class AppState(rx.State):
             "value": "1 SP",
             "category": "tool",
             "description": "A standard set of dice. If you are proficient with this gaming set, you may add your proficiency bonus to any ability checks made to play with this gaming set.",
+            "quantity": 1,
         },
         {
             "name": "Thieves' Tools",
@@ -95,6 +101,7 @@ class AppState(rx.State):
             "value": "25 GP",
             "category": "tool",
             "description": "This set of tools includes a small file, a set of lock picks, a small mirror mounted on a metal handle, a set of narrow-bladed scissors, and a pair of pliers. Proficiency with these tools lets you add your proficiency bonus to any ability checks you make to disarm traps or open locks.",
+            "quantity": 1,
         },
     ]
 
@@ -109,6 +116,7 @@ class AppState(rx.State):
             "weight": "2",
             "value": "10 GP",
             "description": "A light, easy to use shortsword.",
+            "quantity": 1,
         },
         {
             "name": "Quarterstaff",
@@ -120,6 +128,7 @@ class AppState(rx.State):
             "weight": "4",
             "value": "2 SP",
             "description": "A simple staff.",
+            "quantity": 1,
         },
     ]
 
@@ -132,6 +141,7 @@ class AppState(rx.State):
             "weight": "10",
             "value": "10 GP",
             "description": "A set of sturdy leather armor.",
+            "quantity": 1,
         },
         {
             "name": "Plate Armor",
@@ -141,6 +151,7 @@ class AppState(rx.State):
             "weight": "65",
             "value": "1500 GP",
             "description": "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body. Imposes disadvantage on Stealth rolls while worn, and requires a minimum Strength score of 15 to wear.",
+            "quantity": 1,
         },
     ]
 
@@ -172,6 +183,7 @@ class AddCustomWeaponState(AppState):
     weight: str
     value: str
     description: str
+    quantity: int
 
     def create_weapon(self):
         weapon = Weapon(
@@ -183,7 +195,8 @@ class AddCustomWeaponState(AppState):
             tags=self.tags,
             weight=self.weight,
             value=self.value,
-            description=self.description
+            description=self.description,
+            quantity=self.quantity
         )
 
         self.add_item_to_inv(title="WEAPONS", item=weapon)
