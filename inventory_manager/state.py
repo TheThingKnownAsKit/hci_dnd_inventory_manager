@@ -58,12 +58,12 @@ class AppState(rx.State):
     character_cp: int = 0
     level: int = 1
     stats: list[Stat] = [
-        {"name": "STR", "value": 10, "bg_class": "bg-purple-300"},
-        {"name": "DEX", "value": 12, "bg_class": "bg-purple-400"},
-        {"name": "CON", "value": 14, "bg_class": "bg-purple-300"},
-        {"name": "INT", "value": 8, "bg_class": "bg-purple-400"},
-        {"name": "WIS", "value": 15, "bg_class": "bg-purple-300"},
-        {"name": "CHA", "value": 16, "bg_class": "bg-purple-400"},
+        {"name": "STR", "value": 10, "bg_class": "bg-purple-400"},
+        {"name": "DEX", "value": 12, "bg_class": "bg-purple-500"},
+        {"name": "CON", "value": 14, "bg_class": "bg-purple-400"},
+        {"name": "INT", "value": 8, "bg_class": "bg-purple-500"},
+        {"name": "WIS", "value": 15, "bg_class": "bg-purple-400"},
+        {"name": "CHA", "value": 16, "bg_class": "bg-purple-500"},
     ]
 
     consumableInv: list[Item] = []
