@@ -31,7 +31,16 @@ def _item_container_subheader(title: str) -> rx.Component:
                 ),
                 rx.dialog.content(f"Add Custom {title}"),
             ),
-
+        ),
+        rx.scroll_area(
+            rx.foreach(
+                AppState.weaponData,  # Your state list here
+                lambda item: rx.el.div(
+                    item,
+                    class_name="p-2 border-b border-gray-300"
+                )
+            ),
+            class_name="flex-grow p-4 bg-yellow-50"
         ),
     )
 

@@ -71,3 +71,13 @@ class AppState(rx.State):
         {"name": "Leather Armor", "weightClass": "Light", "AC": "11 + Dex", "rarity": "Common", "weight": 10, "value": "10 GP", "description": "A set of sturdy leather armor."},
         {"name": "Plate Armor", "weightClass": "Heavy", "AC": "18", "rarity": "Common", "weight": 65, "value": "1500 GP", "description": "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body. Imposes disadvantage on Stealth rolls while worn, and requires a minimum Strength score of 15 to wear."}
     ]
+
+
+class AddCustomItemState(rx.State):
+    """The current state of the user trying to add a custom item and all the fields to keep track of."""
+
+class AddCustomWeaponState(rx.State):
+    """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
+
+class AddCustomArmorState(rx.State):
+    """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
