@@ -5,7 +5,7 @@ from typing import TypedDict
 class Stat(TypedDict):
     name: str
     value: int
-    color: str
+    bg_class: str
 
 class Item(TypedDict):
     name: str
@@ -43,16 +43,37 @@ class AppState(rx.State):
     """The app state."""
 
     character_name: str = "CHARACTER NAME"
+    character_class: str = "CHARACTER CLASS"
+    character_subclass: str = "CHARACTER SUBCLASS"
+    character_subrace: str = "CHARACTER SUBRACE"
     character_race: str = "CHARACTER RACE"
+    character_pp: int = 0
+    character_gp: int = 0
+    character_ep: int = 0
+    character_sp: int = 0
+    character_cp: int = 0
     level: int = 1
     stats: list[Stat] = [
-        {"name": "STR", "value": 10, "color": "color1"},
-        {"name": "DEX", "value": 12, "color": "color2"},
-        {"name": "CON", "value": 14, "color": "color1"},
-        {"name": "INT", "value": 8, "color": "color2"},
-        {"name": "WIS", "value": 15, "color": "color1"},
-        {"name": "CHA", "value": 16, "color": "color2"},
+        {"name": "STR", "value": 10, "bg_class": "bg-purple-300"},
+        {"name": "DEX", "value": 12, "bg_class": "bg-purple-400"},
+        {"name": "CON", "value": 14, "bg_class": "bg-purple-300"},
+        {"name": "INT", "value": 8, "bg_class": "bg-purple-400"},
+        {"name": "WIS", "value": 15, "bg_class": "bg-purple-300"},
+        {"name": "CHA", "value": 16, "bg_class": "bg-purple-400"},
     ]
+
+    def update_stat(self, name: str, new_value: str):
+        """Update a character stat by name."""
+        updated = []
+        for s in self.stats:
+            if s["name"] == name:
+                try:
+                    s = s.copy()  # make a copy to avoid mutating original
+                    s["value"] = int(new_value)
+                except ValueError:
+                    s["value"] = 0
+            updated.append(s)
+        self.stats = updated
 
     consumableData: list[Item] = [
         {

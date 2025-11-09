@@ -62,65 +62,159 @@ def inventory_container(title: str, color: str) -> rx.Component:
     )
 
 
-def stat_display(stat: Stat) -> rx.Component:
-    color_map = {
-        "color1": "bg-purple-300",
-        "color2": "bg-purple-400",
-    }
-    color_map_var = rx.Var.create(color_map)
-    return rx.el.div(
-        rx.el.div(
-            stat["name"],
-            class_name="absolute top-0 w-full text-center text-base font-semibold bg-gray-200 border-b border-black py-0.5",
-        ),
-        rx.el.div(
-            stat["value"],
-            class_name="absolute bottom-2 w-full text-center text-xl font-bold text-white",
-        ),
-        class_name=f"relative w-28 h-24 {color_map_var[stat['color']]} text-black",
-        style={
-            "clip_path": "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)"
-        },
-    )
-
-
 def character_sheet() -> rx.Component:
+    stats = AppState.stats
+
+    def stat_div(stat: Stat) -> rx.Component:
+        return rx.el.div(
+            rx.el.div(
+                stat["name"],
+                class_name="absolute top-0 w-full text-center text-base font-semibold bg-gray-200 border-b border-black py-0.5",
+            ),
+            rx.el.input(
+                value=stat["value"],
+                on_change=lambda value, stat_name=stat["name"]: AppState.update_stat(stat_name, value),
+                class_name="absolute bottom-2 w-full text-center text-xl font-bold text-white bg-transparent border-none focus:outline-none",
+                type="number",
+            ),
+            class_name=f"relative w-28 h-24 {stat['bg_class']} text-black",
+            style={
+                "clip_path": "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)"
+            },
+        )
+    
     return rx.el.div(
         _container_header("CHARACTER SHEET", "bg-purple-500"),
         rx.el.div(
+            
+            # --- Name / Level ---
             rx.el.div(
                 rx.el.div(
-                    rx.el.label("Name", class_name="text-sm font-semibold"),
+                    rx.el.label("Name", class_name="text-base font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_name,
                         on_change=AppState.set_character_name,
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     ),
-                    class_name="flex-grow",
+                    class_name="flex flex-col flex-[5]",
                 ),
                 rx.el.div(
-                    rx.el.label("Level", class_name="text-sm font-semibold"),
+                    rx.el.label("Level", class_name="text-base font-semibold self-start"),
                     rx.el.input(
                         default_value=AppState.level.to_string(),
                         on_change=AppState.set_level,
-                        class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
+                    class_name="flex flex-col flex-[1] items-end",
                 ),
-                class_name="flex gap-4 p-4 items-end",
+                class_name="flex gap-x-4 gap-y-2 p-4 items-end",
             ),
+
+            # --- Class / Subclass ---
             rx.el.div(
-                rx.el.label("Race", class_name="text-sm font-semibold"),
-                rx.el.input(
-                    default_value=AppState.character_race,
-                    on_change=AppState.set_character_race,
-                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                rx.el.div(
+                    rx.el.label("Class", class_name="text-base font-semibold"),
+                    rx.el.input(
+                        default_value=AppState.character_class,
+                        on_change=AppState.set_character_class,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200",
+                    )
                 ),
-                class_name="px-4 pb-4",
+                rx.el.div(
+                    rx.el.label("Subclass", class_name="text-base font-semibold"),
+                    rx.el.input(
+                        default_value=AppState.character_subclass,
+                        on_change=AppState.set_character_subclass,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200",
+                    ),
+                ),
+                class_name="flex gap-x-4 gap-y-2 p-4 items-end",
             ),
+
+            # --- Race / Subrace ---
             rx.el.div(
-                rx.foreach(AppState.stats, stat_display),
+                rx.el.div(
+                    rx.el.label("Race", class_name="text-base font-semibold"),
+                    rx.el.input(
+                        default_value=AppState.character_race,
+                        on_change=AppState.set_character_race,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200",
+                    )
+                ),
+                rx.el.div(
+                    rx.el.label("Subrace", class_name="text-base font-semibold"),
+                    rx.el.input(
+                        default_value=AppState.character_subrace,
+                        on_change=AppState.set_character_subrace,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200",
+                    ),
+                ),
+                class_name="flex gap-x-4 gap-y-2 p-4 items-end",
+            ),
+
+            # --- Stats Grid ---
+            rx.el.div(
+                rx.foreach(
+                    stats,
+                    lambda stat: stat_div(stat)
+                ),
                 class_name="grid grid-cols-3 gap-y-4 gap-x-2 p-4 justify-items-center",
+            ),
+
+            # --- Currency ---
+            rx.el.div(
+                rx.el.div(
+                    rx.el.label("PP", class_name="text-base font-semibold self-start"),
+                    rx.el.input(
+                        default_value=AppState.character_pp.to_string(),
+                        on_change=AppState.set_character_pp,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
+                        type="number",
+                    ),
+                    class_name="flex flex-col",
+                ),
+                rx.el.div(
+                    rx.el.label("GP", class_name="text-base font-semibold self-start"),
+                    rx.el.input(
+                        default_value=AppState.character_gp.to_string(),
+                        on_change=AppState.set_character_gp,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
+                        type="number",
+                    ),
+                    class_name="flex flex-col",
+                ),
+                rx.el.div(
+                    rx.el.label("EP", class_name="text-base font-semibold self-start"),
+                    rx.el.input(
+                        default_value=AppState.character_ep.to_string(),
+                        on_change=AppState.set_character_ep,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
+                        type="number",
+                    ),
+                    class_name="flex flex-col",
+                ),
+                rx.el.div(
+                    rx.el.label("SP", class_name="text-base font-semibold self-start"),
+                    rx.el.input(
+                        default_value=AppState.character_sp.to_string(),
+                        on_change=AppState.set_character_sp,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
+                        type="number",
+                    ),
+                    class_name="flex flex-col",
+                ),
+                rx.el.div(
+                    rx.el.label("CP", class_name="text-base font-semibold self-start"),
+                    rx.el.input(
+                        default_value=AppState.character_cp.to_string(),
+                        on_change=AppState.set_character_cp,
+                        class_name="w-full p-2 border-2 border-black bg-gray-200 text-center",
+                        type="number",
+                    ),
+                    class_name="flex flex-col",
+                ),
+                class_name="grid grid-cols-5 gap-x-4 gap-y-2 p-4 items-end",
             ),
             class_name="bg-yellow-50 flex-grow",
         ),
