@@ -46,7 +46,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                         rx.el.button(
                             rx.text(item["name"]),
                             class_name="font-bold text-black text-sm tracking-wide",
-                            on_click=AppState.add_item_to_inv(title, item),
+                            on_click=AppState.add_item_to_inv(title, item), # type: ignore
                         ),
                         class_name="p-2 border-b border-gray-300"
                     )
@@ -101,7 +101,7 @@ def character_sheet() -> rx.Component:
                     rx.el.label("Name", class_name="text-sm font-semibold"),
                     rx.el.input(
                         default_value=AppState.character_name,
-                        on_change=AppState.set_character_name,
+                        on_change=AppState.set_character_name, # type: ignore
                         class_name="w-full p-2 border-2 border-black bg-gray-200",
                     ),
                     class_name="flex-grow",
@@ -109,8 +109,8 @@ def character_sheet() -> rx.Component:
                 rx.el.div(
                     rx.el.label("Level", class_name="text-sm font-semibold"),
                     rx.el.input(
-                        default_value=AppState.level.to_string(),
-                        on_change=AppState.set_level,
+                        default_value=AppState.level.to_string(), # type: ignore
+                        on_change=AppState.set_level, # type: ignore
                         class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
                         type="number",
                     ),
@@ -121,7 +121,7 @@ def character_sheet() -> rx.Component:
                 rx.el.label("Race", class_name="text-sm font-semibold"),
                 rx.el.input(
                     default_value=AppState.character_race,
-                    on_change=AppState.set_character_race,
+                    on_change=AppState.set_character_race, # type: ignore
                     class_name="w-full p-2 border-2 border-black bg-gray-200",
                 ),
                 class_name="px-4 pb-4",
