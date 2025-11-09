@@ -1,5 +1,5 @@
 import reflex as rx
-from typing import TypedDict
+from typing import TypedDict, NotRequired
 
 
 class Stat(TypedDict):
@@ -9,38 +9,39 @@ class Stat(TypedDict):
 
 class Item(TypedDict):
     name: str
-    rarity: str
-    weight: float
-    value: str
-    category: str
-    description: str
+    rarity: NotRequired[str]
+    weight: NotRequired[str]
+    value: NotRequired[str]
+    category: NotRequired[str]
+    description: NotRequired[str]
 
 
 class Weapon(TypedDict):
     name: str
-    martial: bool
-    damage: str
-    damageType: str
-    rarity: str
-    tags: str
-    weight: float
-    value: str
-    description: str
+    martial: NotRequired[str]
+    damage: NotRequired[str]
+    damageType: NotRequired[str]
+    rarity: NotRequired[str]
+    tags: NotRequired[str]
+    weight: NotRequired[str]
+    value: NotRequired[str]
+    description: NotRequired[str]
 
 
 class Armor(TypedDict):
     name: str
-    weightClass: str
-    AC: str
-    rarity: str
-    weight: float
-    value: str
-    description: str
+    weightClass: NotRequired[str]
+    AC: NotRequired[str]
+    rarity: NotRequired[str]
+    weight: NotRequired[str]
+    value: NotRequired[str]
+    description: NotRequired[str]
 
 
 
 class AppState(rx.State):
     """The app state."""
+    dialog_open: bool = False
 
     character_name: str = "CHARACTER NAME"
     character_race: str = "CHARACTER RACE"
@@ -63,7 +64,7 @@ class AppState(rx.State):
         {
             "name": "Potion of Healing",
             "rarity": "Common",
-            "weight": 0.5,
+            "weight": "0.5",
             "value": "50 GP",
             "category": "potion",
             "description": "You regain 2d4+2 hit points when you drink this potion. Drinking or administering a potion takes an action.",
@@ -71,7 +72,7 @@ class AppState(rx.State):
         {
             "name": "Arrow",
             "rarity": "None",
-            "weight": 0.05,
+            "weight": "0.05",
             "value": "10 CP",
             "category": "ammunition",
             "description": "You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack. At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield.",
@@ -82,7 +83,7 @@ class AppState(rx.State):
         {
             "name": "Dice Set",
             "rarity": "None",
-            "weight": 0.0,
+            "weight": "0.0",
             "value": "1 SP",
             "category": "tool",
             "description": "A standard set of dice. If you are proficient with this gaming set, you may add your proficiency bonus to any ability checks made to play with this gaming set.",
@@ -90,7 +91,7 @@ class AppState(rx.State):
         {
             "name": "Thieves' Tools",
             "rarity": "None",
-            "weight": 0.0,
+            "weight": "0.0",
             "value": "25 GP",
             "category": "tool",
             "description": "This set of tools includes a small file, a set of lock picks, a small mirror mounted on a metal handle, a set of narrow-bladed scissors, and a pair of pliers. Proficiency with these tools lets you add your proficiency bonus to any ability checks you make to disarm traps or open locks.",
@@ -100,23 +101,23 @@ class AppState(rx.State):
     weaponData: list[Weapon] = [
         {
             "name": "Shortsword",
-            "martial": True,
+            "martial": "True",
             "damage": "1d6",
             "damageType": "piercing",
             "rarity": "Common",
             "tags": "Finesse, Light",
-            "weight": 2,
+            "weight": "2",
             "value": "10 GP",
             "description": "A light, easy to use shortsword.",
         },
         {
             "name": "Quarterstaff",
-            "martial": True,
+            "martial": "True",
             "damage": "1d6",
             "damageType": "bludgeoning",
             "rarity": "Common",
             "tags": "Versatile",
-            "weight": 4,
+            "weight": "4",
             "value": "2 SP",
             "description": "A simple staff.",
         },
@@ -128,7 +129,7 @@ class AppState(rx.State):
             "weightClass": "Light",
             "AC": "11 + Dex",
             "rarity": "Common",
-            "weight": 10,
+            "weight": "10",
             "value": "10 GP",
             "description": "A set of sturdy leather armor.",
         },
@@ -137,7 +138,7 @@ class AppState(rx.State):
             "weightClass": "Heavy",
             "AC": "18",
             "rarity": "Common",
-            "weight": 65,
+            "weight": "65",
             "value": "1500 GP",
             "description": "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body. Imposes disadvantage on Stealth rolls while worn, and requires a minimum Strength score of 15 to wear.",
         },
@@ -153,12 +154,44 @@ class AppState(rx.State):
             self.consumableInv.append(item)
         elif title == "BASIC":
             self.basicInv.append(item)
+        
+        print(item)
 
-class AddCustomItemState(rx.State):
+class AddCustomItemState(AppState):
     """The current state of the user trying to add a custom item and all the fields to keep track of."""
 
-class AddCustomWeaponState(rx.State):
+class AddCustomWeaponState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
 
-class AddCustomArmorState(rx.State):
+    name: str
+    martial: str
+    damage: str
+    damageType: str
+    rarity: str
+    tags: str
+    weight: str
+    value: str
+    description: str
+
+    def create_weapon(self):
+        weapon = Weapon(
+            name=self.name,
+            martial=self.martial,
+            damage=self.damage,
+            damageType=self.damageType,
+            rarity=self.rarity,
+            tags=self.tags,
+            weight=self.weight,
+            value=self.value,
+            description=self.description
+        )
+
+        self.add_item_to_inv(title="WEAPONS", item=weapon)
+        self.clear_state()
+        self.dialog_open = False
+    
+    def clear_state(self):
+        self = AddCustomWeaponState
+
+class AddCustomArmorState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
