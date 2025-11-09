@@ -1,85 +1,37 @@
-"""Welcome to Reflex! This file outlines the steps to create a basic app."""
-
 import reflex as rx
-
-from rxconfig import config
-
-
-class State(rx.State):
-    """The app state."""
-
-
-
-###-------------------------###
-### CHARACTER SHEET SECTION ###
-###-------------------------###
-
-def character_scheet():
-    return rx.flex(
-        rx.box("Character sheet", p=4, bg="red.200"),
-        direction="column",
-        flex=1,
-    )
-
-###-----------------###
-### WEAPONS SECTION ###
-###-----------------###
-
-def weapons():
-    return rx.box("Weapons", p=4, bg="green.200")
-
-###---------------###
-### ARMOR SECTION ###
-###---------------###
-
-def armor():
-    return rx.box("Armor", p=4, bg="green.300")
-
-###---------------------###
-### CONSUMABLES SECTION ###
-###---------------------###
-
-def consumables():
-    return rx.box("Consumables", p=4, bg="green.400")
-
-###----------------###
-### BASICS SECTION ###
-###----------------###
-
-def basics():
-    return rx.box("Basics", p=4, bg="blue.200")
-
-###---------------------###
-### INFORMATION SECTION ###
-###---------------------###
-
-def information():
-    return rx.box("Information", p=4, bg="blue.300")
-
+from inventory_manager.components import character_sheet, inventory_container, information_container
 
 
 def index() -> rx.Component:
-    # Welcome Page (Index)
-    return rx.flex(
-        character_scheet(),
-        rx.flex(
-            weapons(),
-            armor(),
-            consumables(),
-            direction="column",
-            flex=1,
+    return rx.el.main(
+        rx.el.div(
+            rx.el.div(character_sheet(), class_name="w-1/3 p-2"),
+            rx.el.div(
+                inventory_container("WEAPONS", "bg-blue-400"),
+                inventory_container("ARMOR", "bg-red-400"),
+                inventory_container("CONSUMABLES", "bg-green-400"),
+                class_name="w-1/3 p-2 flex flex-col gap-4",
+            ),
+            rx.el.div(
+                inventory_container("BASIC", "bg-orange-400"),
+                information_container(),
+                class_name="w-1/3 p-2 flex flex-col gap-4",
+            ),
+            class_name="flex flex-row w-full h-screen",
         ),
-        rx.flex(
-            basics(),
-            information(),
-            direction="column",
-            flex=1,
-        ),
-        direction="row",
-        gap=2,
-        height="100vh",
+        class_name="bg-yellow-100 font-['Inter']",
     )
 
 
-app = rx.App()
+app = rx.App(
+    theme=rx.theme(appearance="light"),
+    head_components=[
+        rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
+        rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", cross_origin=""),
+        rx.el.link(
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+            rel="stylesheet",
+        ),
+    ],
+)
 app.add_page(index)
