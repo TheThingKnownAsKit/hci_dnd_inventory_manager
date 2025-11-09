@@ -16,6 +16,12 @@ data_map = {
     "BASIC": AppState.basicData,
 }
 
+def get_current_inv(): return {
+    "WEAPONS": AppState.weaponInv,
+    "ARMOR": AppState.armorInv,
+    "CONSUMABLES": AppState.consumableInv,
+    "BASIC": AppState.basicInv,
+}
 custom_state_map = {
     "WEAPONS": AddCustomWeaponState,
     "ARMOR": AddCustomArmorState,
@@ -115,25 +121,106 @@ def _item_container_subheader(title: str) -> rx.Component:
                         ),
                         rx.cond(    # Add a custom armor
                             (title == "ARMOR"),
-                            rx.el.div(
+                            rx.form(
                                 rx.el.label("Name", class_name="text-sm font-semibold"),
                                 rx.el.input(
-                                    default_value=AppState.character_name,
-                                    on_change=AppState.set_character_name,  # type: ignore
+                                    on_change=AddCustomArmorState.set_name,  # type: ignore
                                     class_name="w-full p-2 border-2 border-black bg-gray-200",
                                 ),
+                                rx.el.label("Weight Class", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_weightClass,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("AC", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_AC,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Rarity", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_rarity,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Weight", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_weight,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Value", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_value,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Description", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomArmorState.set_description,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.div(  # wrap Quantity label + input in a column
+                                    rx.el.label("Quantity", class_name="text-sm font-semibold"),
+                                    rx.el.input(
+                                        default_value=1,  # type: ignore
+                                        on_change=AddCustomArmorState.set_quantity,  # type: ignore
+                                        class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
+                                        type="number",
+                                    ),
+                                    class_name="flex flex-col mb-2",  # flex-col to stack vertically
+                                ),
+                                rx.button("Add Armor", type="submit"),
+                                on_submit=lambda: AddCustomArmorState.create_armor,
                                 class_name="flex-grow",
                             ),
                         ),
                         rx.cond(    # Add a custom consumable or basic item
                             (title == "BASIC" or title == "CONSUMABLES"),
-                            rx.el.div(
+                            rx.form(
                                 rx.el.label("Name", class_name="text-sm font-semibold"),
                                 rx.el.input(
-                                    default_value=AppState.character_name,
-                                    on_change=AppState.set_character_name,  # type: ignore
+                                    on_change=AddCustomItemState.set_name,  # type: ignore
                                     class_name="w-full p-2 border-2 border-black bg-gray-200",
                                 ),
+                                rx.el.label("Rarity", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomItemState.set_rarity,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Weight", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomItemState.set_weight,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Value", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomItemState.set_value,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Category", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomItemState.set_category,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.label("Description", class_name="text-sm font-semibold"),
+                                rx.el.input(
+                                    on_change=AddCustomItemState.set_description,  # type: ignore
+                                    class_name="w-full p-2 border-2 border-black bg-gray-200",
+                                ),
+                                rx.el.div(  # wrap Quantity label + input in a column
+                                    rx.el.label("Quantity", class_name="text-sm font-semibold"),
+                                    rx.el.input(
+                                        default_value=1,  # type: ignore
+                                        on_change=AddCustomItemState.set_quantity,  # type: ignore
+                                        class_name="w-16 p-2 border-2 border-black bg-gray-200 text-center",
+                                        type="number",
+                                    ),
+                                    class_name="flex flex-col mb-2",  # flex-col to stack vertically
+                                ),
+                                rx.button("Add Item", type="submit"),
+                                on_submit=(
+                                    AddCustomItemState.create_basic_item
+                                    if title == "BASIC"
+                                    else AddCustomItemState.create_consumable_item
+                                ), # type: ignore
                                 class_name="flex-grow",
                             ),
                         ),
@@ -149,7 +236,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                         rx.el.button(
                             rx.text(item["name"]),
                             class_name="font-bold text-black text-sm tracking-wide",
-                            on_click=AppState.add_item_to_inv(title, item), # type: ignore
+                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
                         ),
                         class_name="p-2 border-b border-gray-300"
                     )
@@ -164,8 +251,41 @@ def inventory_container(title: str, color: str) -> rx.Component:
     return rx.el.div(
         _container_header(title, color),
         _item_container_subheader(title=title),
-        rx.el.div(class_name="flex-grow p-4 bg-yellow-50"),
-        class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
+        rx.scroll_area( # This is the list of premade items to add
+            rx.el.div(    
+                rx.foreach(
+                    get_current_inv()[title],
+                    lambda item: rx.el.div(
+                        rx.el.button(
+                            rx.box(width="50px", height="50px", aspect_ratio=1, background="center/cover url('/potion.jpg')"),
+                            rx.text(item["name"],
+                                    style={
+                                        "width": "100%",
+                                        "fontSize": "calc(0.2 * 50px)",
+                                        "whiteSpace": "normal",
+                                        "overflow": "visible",
+                                        "textAlign": "center",
+                                        "wordBreak": "break-word"
+                                    }),
+                            class_name="flex flex-col justify-end items-center flex-grow p-1 bg-gray-300 border-2 border-black rounded font-bold text-black tracking-wide",
+                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
+                        ),
+                        class_name="p-2 border-b border-gray-300"
+                    )
+                    
+                ),
+                class_name="flex flex-wrap gap-2 justify-start items-start p-4 bg-yellow-50"
+            ),
+             class_name="flex-grow p-4 bg-yellow-50",
+
+        ),
+        style={
+            "minHeight": "150px",
+            "maxHeight": "500px",
+            "display": "flex",
+            "flexDirection": "column",
+        },
+    class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
     )
 
 

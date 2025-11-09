@@ -192,6 +192,48 @@ class AppState(rx.State):
 class AddCustomItemState(AppState):
     """The current state of the user trying to add a custom item and all the fields to keep track of."""
 
+    name: str
+    rarity: str
+    weight: str
+    value: str
+    category: str
+    description: str
+    quantity: int
+
+    def create_basic_item(self):
+        item = Item(
+            name=self.name,
+            rarity=self.rarity,
+            weight=self.weight,
+            value=self.value,
+            category=self.category,
+            description=self.description,
+            quantity=self.quantity
+        )
+
+        print("Adding basic item")
+
+        self.add_item_to_inv(title="BASIC", item=item)
+        self.dialog_open = False
+        self = AddCustomItemState
+    
+    def create_consumable_item(self):
+        item = Item(
+            name=self.name,
+            rarity=self.rarity,
+            weight=self.weight,
+            value=self.value,
+            category=self.category,
+            description=self.description,
+            quantity=self.quantity
+        )
+
+        print("Adding consumable item")
+
+        self.add_item_to_inv(title="CONSUMABLES", item=item)
+        self.dialog_open = False
+        self = AddCustomItemState
+
 class AddCustomWeaponState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
 
@@ -221,11 +263,33 @@ class AddCustomWeaponState(AppState):
         )
 
         self.add_item_to_inv(title="WEAPONS", item=weapon)
-        self.clear_state()
         self.dialog_open = False
-    
-    def clear_state(self):
         self = AddCustomWeaponState
 
 class AddCustomArmorState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
+
+    name: str
+    weightClass: str
+    AC: str
+    rarity: str
+    weight: str
+    value: str
+    description: str
+    quantity: int
+
+    def create_armor(self):
+        armor = Armor(
+            name=self.name,
+            weightClass=self.weightClass,
+            AC=self.AC,
+            rarity=self.rarity,
+            weight=self.weight,
+            value=self.value,
+            description=self.description,
+            quantity=self.quantity
+        )
+
+        self.add_item_to_inv(title="ARMOR", item=armor)
+        self.dialog_open = False
+        self = AddCustomArmorState
