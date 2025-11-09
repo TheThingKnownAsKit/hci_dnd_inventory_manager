@@ -20,7 +20,7 @@ data_map = {
 # This is where the Add Item button goes
 def _item_container_subheader(title: str) -> rx.Component:
     return rx.dialog.root(
-        rx.dialog.trigger(
+        rx.dialog.trigger(  # This is the add item button
             rx.el.button(
                 rx.icon(tag="circle_plus", class_name="text-green-600 mr-2"),
                 "Add Item",
@@ -28,9 +28,9 @@ def _item_container_subheader(title: str) -> rx.Component:
             ),
             class_name="p-2 border-b-2 border-black bg-gray-200",
         ),
-        rx.dialog.content(
+        rx.dialog.content(  # This is the add items dialog popup
             rx.dialog.title(f"Add {title} Item"),
-            rx.dialog.root(         # This is where custom items are
+            rx.dialog.root( # This is the add custom items dialog popup
                 rx.dialog.trigger(
                     rx.el.button(f"Add Custom {title}",
                         class_name="flex items-center text-sm font-semibold text-gray-700",
@@ -39,7 +39,7 @@ def _item_container_subheader(title: str) -> rx.Component:
                 ),
                 rx.dialog.content(f"Add Custom {title}"),
             ),
-            rx.scroll_area(
+            rx.scroll_area( # This is the list of premade items to add
                 rx.foreach(
                     data_map[title],
                     lambda item: rx.el.div(
