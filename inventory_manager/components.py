@@ -9,6 +9,14 @@ def _container_header(title: str, color: str) -> rx.Component:
     )
 
 
+data_map = {
+    "WEAPONS": AppState.weaponData,
+    "ARMOR": AppState.armorData,
+    "CONSUMABLES": AppState.consumableData,
+    "BASIC": AppState.basicData,
+}
+
+
 # This is where the Add Item button goes
 def _item_container_subheader(title: str) -> rx.Component:
     return rx.dialog.root(
@@ -31,16 +39,16 @@ def _item_container_subheader(title: str) -> rx.Component:
                 ),
                 rx.dialog.content(f"Add Custom {title}"),
             ),
-        ),
-        rx.scroll_area(
-            rx.foreach(
-                AppState.weaponData,  # Your state list here
-                lambda item: rx.el.div(
-                    item,
-                    class_name="p-2 border-b border-gray-300"
-                )
+            rx.scroll_area(
+                rx.foreach(
+                    data_map[title],  # Your state list here
+                    lambda item: rx.el.div(
+                        rx.text(item["name"], class_name="font-bold text-black text-sm tracking-wide"),
+                        class_name="p-2 border-b border-gray-300"
+                    )
+                ),
+                class_name="flex-grow p-4 bg-yellow-50"
             ),
-            class_name="flex-grow p-4 bg-yellow-50"
         ),
     )
 
