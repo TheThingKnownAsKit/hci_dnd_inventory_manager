@@ -300,6 +300,12 @@ def character_sheet() -> rx.Component:
                 on_change=lambda value, stat_name=stat["name"]: AppState.update_stat(stat_name, value), # type: ignore
                 class_name="absolute bottom-2 w-full text-center text-xl font-bold text-white bg-transparent border-none focus:outline-none",
                 type="number",
+                style={
+                    "appearance": "textfield",
+                    "-moz-appearance": "textfield",
+                    "::-webkit-inner-spin-button": {"-webkit-appearance": "none", "margin": "0"},
+                    "::-webkit-outer-spin-button": {"-webkit-appearance": "none", "margin": "0"},
+                },
             ),
             class_name=f"relative w-28 h-24 {stat['bg_class']} text-black",
             style={
