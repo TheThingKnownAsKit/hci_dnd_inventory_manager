@@ -9,6 +9,7 @@ class Stat(TypedDict):
 
 class Item(TypedDict):
     name: str
+    itemID: int
     rarity: NotRequired[str]
     weight: NotRequired[str]
     value: NotRequired[str]
@@ -20,6 +21,7 @@ class Item(TypedDict):
 
 class Weapon(TypedDict):
     name: str
+    itemID: int
     martial: NotRequired[str]
     damage: NotRequired[str]
     damageType: NotRequired[str]
@@ -34,6 +36,7 @@ class Weapon(TypedDict):
 
 class Armor(TypedDict):
     name: str
+    itemID: int
     weightClass: NotRequired[str]
     AC: NotRequired[str]
     rarity: NotRequired[str]
@@ -48,6 +51,7 @@ class Armor(TypedDict):
 class AppState(rx.State):
     """The app state."""
     dialog_open: bool = False
+    selected_item_ID: int = 0
 
     character_name: str = "CHARACTER NAME"
     character_class: str = "CHARACTER CLASS"
@@ -91,9 +95,16 @@ class AppState(rx.State):
             updated.append(s)
         self.stats = updated
 
+    # Each item has an ID based on its class
+    # Weapons: 1000-1999
+    # Armor: 2000-2999
+    # Consummables: 3000-5999
+    # Basic: 6000-8999
+
     consumableData: list[Item] = [
         {
             "name": "Potion of Healing",
+            "itemID": 3000,
             "rarity": "Common",
             "weight": "0.5",
             "value": "50 GP",
@@ -104,6 +115,7 @@ class AppState(rx.State):
         },
         {
             "name": "Arrow",
+            "itemID": 3001,
             "rarity": "None",
             "weight": "0.05",
             "value": "10 CP",
@@ -117,6 +129,7 @@ class AppState(rx.State):
     basicData: list[Item] = [
         {
             "name": "Dice Set",
+            "itemID": 6000,
             "rarity": "None",
             "weight": "0.0",
             "value": "1 SP",
@@ -127,6 +140,7 @@ class AppState(rx.State):
         },
         {
             "name": "Thieves' Tools",
+            "itemID": 6001,
             "rarity": "None",
             "weight": "0.0",
             "value": "25 GP",
@@ -140,6 +154,7 @@ class AppState(rx.State):
     weaponData: list[Weapon] = [
         {
             "name": "Shortsword",
+            "itemID": 1000,
             "martial": "True",
             "damage": "1d6",
             "damageType": "piercing",
@@ -153,6 +168,7 @@ class AppState(rx.State):
         },
         {
             "name": "Quarterstaff",
+            "itemID": 1001,
             "martial": "True",
             "damage": "1d6",
             "damageType": "bludgeoning",
@@ -169,6 +185,7 @@ class AppState(rx.State):
     armorData: list[Armor] = [
         {
             "name": "Leather Armor",
+            "itemID": 2000,
             "weightClass": "Light",
             "AC": "11 + Dex",
             "rarity": "Common",
@@ -180,6 +197,7 @@ class AppState(rx.State):
         },
         {
             "name": "Plate Armor",
+            "itemID": 2001,
             "weightClass": "Heavy",
             "AC": "18",
             "rarity": "Common",
@@ -205,10 +223,21 @@ class AppState(rx.State):
         print(item)
 
     def check_item_information(self, item):
-        self.infoHeader: str = "No Item Selected"
-        self.infoSubheader: str = ""
-        self.infoBlock: str = ""
-        self.infoQuantity: str = ""
+        item_id = item["itemID"]
+
+    # --- Toggle behavior ---
+        if self.selected_item_ID == item_id:
+            # Clicking the same item again → clear info
+            self.selected_item_ID = 0
+            self.infoHeader = "No Item Selected"
+            self.infoSubheader = ""
+            self.infoBlock = ""
+            self.infoQuantity = ""
+            return
+
+        # Otherwise → show the new item
+        self.selected_item_ID = item_id
+
         if item["type"] == "basic":
             self.infoHeader = item["name"]
             self.infoSubheader = item["category"]
