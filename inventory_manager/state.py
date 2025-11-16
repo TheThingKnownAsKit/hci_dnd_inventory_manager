@@ -71,11 +71,11 @@ class AppState(rx.State):
     infoQuantity: str = ""
     stats: list[Stat] = [
         {"name": "STR", "value": 10, "bg_class": "bg-purple-400"},
-        {"name": "DEX", "value": 12, "bg_class": "bg-purple-500"},
-        {"name": "CON", "value": 14, "bg_class": "bg-purple-400"},
-        {"name": "INT", "value": 8, "bg_class": "bg-purple-500"},
-        {"name": "WIS", "value": 15, "bg_class": "bg-purple-400"},
-        {"name": "CHA", "value": 16, "bg_class": "bg-purple-500"},
+        {"name": "DEX", "value": 10, "bg_class": "bg-purple-500"},
+        {"name": "CON", "value": 10, "bg_class": "bg-purple-400"},
+        {"name": "INT", "value": 10, "bg_class": "bg-purple-500"},
+        {"name": "WIS", "value": 10, "bg_class": "bg-purple-400"},
+        {"name": "CHA", "value": 10, "bg_class": "bg-purple-500"},
     ]
 
     consumableInv: list[Item] = []

@@ -229,16 +229,22 @@ def _item_container_subheader(title: str) -> rx.Component:
             rx.scroll_area( # This is the list of premade items to add
                 rx.foreach(
                     data_map[title],
-                    lambda item: rx.el.div(
-                        rx.el.button(
-                            rx.text(item["name"]),
-                            class_name="font-bold text-black text-sm tracking-wide",
-                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
+                    lambda item, i: rx.el.button(
+                        rx.text(
+                            item["name"],
+                            class_name="text-left w-full",
                         ),
-                        class_name="p-2 border-b border-gray-300"
+                        class_name=rx.cond(
+                            (i % 2) == 0,
+                            # if even
+                            "w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-gray-400",
+                            # if odd
+                            "w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-gray-200",
+                        ),
+                        on_click=lambda: AppState.add_item_to_inv(title, item),
                     )
                 ),
-                class_name="flex-grow p-4 bg-yellow-50"
+                class_name="flex-grow p-2"
             ),
         ),
     )
