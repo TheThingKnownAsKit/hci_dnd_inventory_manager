@@ -244,7 +244,7 @@ def _item_container_subheader(title: str) -> rx.Component:
     )
 
 
-def inventory_container(title: str, color: str) -> rx.Component:
+def inventory_container(title: str, color: str, image: str) -> rx.Component:
     return rx.el.div(
         _container_header(title, color),
         _item_container_subheader(title=title),
@@ -254,7 +254,7 @@ def inventory_container(title: str, color: str) -> rx.Component:
                     get_current_inv()[title],
                     lambda item: rx.el.div(
                         rx.el.button( # The button
-                            rx.box(width="50px", height="50px", aspect_ratio=1, background="center/cover url('/potion.jpg')"),
+                            rx.box(width="50px", height="50px", aspect_ratio=1, background="center/cover url(" + image +")"),
                             rx.text(item["name"],
                                     style={
                                         "width": "100%",
@@ -463,10 +463,11 @@ def information_container() -> rx.Component:
             style={
                 "whiteSpace": "pre-line",
                 "overflowY": "auto",
-                "maxHeight": "400px",
+                "maxHeight": "300px",
+                "minHeight": "300px",
                 "padding": "1rem",
                 "text_wrap": "wrap",
             },
             class_name="flex-grow p-4 bg-yellow-50"),
-        class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
+        class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md bg-yellow-50",
     )

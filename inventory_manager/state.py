@@ -60,7 +60,7 @@ class AppState(rx.State):
     character_sp: int = 0
     character_cp: int = 0
     level: int = 1
-    infoHeader: str = ""
+    infoHeader: str = "No Item Selected"
     infoSubheader: str = ""
     infoBlock: str = ""
     infoQuantity: str = ""
@@ -205,7 +205,7 @@ class AppState(rx.State):
         print(item)
 
     def check_item_information(self, item):
-        self.infoHeader: str = ""
+        self.infoHeader: str = "No Item Selected"
         self.infoSubheader: str = ""
         self.infoBlock: str = ""
         self.infoQuantity: str = ""

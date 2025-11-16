@@ -7,13 +7,13 @@ def index() -> rx.Component:
         rx.el.div(
             rx.el.div(character_sheet(), class_name="w-1/3 p-2"),
             rx.el.div(
-                inventory_container("WEAPONS", "bg-blue-400"),
-                inventory_container("ARMOR", "bg-red-400"),
-                inventory_container("CONSUMABLES", "bg-green-600"),
+                inventory_container("WEAPONS", "bg-blue-400", "'/shortSword.png'"),
+                inventory_container("ARMOR", "bg-red-400", "'/chestplate.png'"),
+                inventory_container("CONSUMABLES", "bg-green-600", "'/potion.jpg'"),
                 class_name="w-1/3 p-2 flex flex-col gap-4",
             ),
             rx.el.div(
-                inventory_container("BASIC", "bg-orange-400"),
+                inventory_container("BASIC", "bg-orange-400", "'/ring.jpg'"),
                 information_container(),
                 class_name="w-1/3 p-2 flex flex-col gap-4",
             ),
