@@ -52,6 +52,7 @@ class AppState(rx.State):
     """The app state."""
     dialog_open: bool = False
     selected_item_ID: int = 0
+    nextCustomID: int = 9000
 
     character_name: str = "CHARACTER NAME"
     character_class: str = "CHARACTER CLASS"
@@ -100,6 +101,7 @@ class AppState(rx.State):
     # Armor: 2000-2999
     # Consummables: 3000-5999
     # Basic: 6000-8999
+    # Custom: >= 9000
 
     consumableData: list[Item] = [
         {
@@ -212,12 +214,41 @@ class AppState(rx.State):
     def add_item_to_inv(self, title: str, item):
         """Append an item to the specified category."""
         if title == "WEAPONS":
+            if self.weaponInv is not None:
+                for i in self.weaponInv:
+                    if i["itemID"] == item["itemID"]:
+                        i["quantity"] = i["quantity"] + 1
+                        if i["itemID"] == self.selected_item_ID:
+                            self.refresh_item_quantity(i)
+                        return
+            
             self.weaponInv.append(item)
         elif title == "ARMOR":
+            if self.armorInv is not None:
+                for i in self.armorInv:
+                    if i["itemID"] == item["itemID"]:
+                        i["quantity"] = i["quantity"] + 1
+                        if i["itemID"] == self.selected_item_ID:
+                            self.refresh_item_quantity(i)
+                        return
             self.armorInv.append(item)
         elif title == "CONSUMABLES":
+            if self.consumableInv is not None:
+                for i in self.consumableInv:
+                    if i["itemID"] == item["itemID"]:
+                        i["quantity"] = i["quantity"] + 1
+                        if i["itemID"] == self.selected_item_ID:
+                            self.refresh_item_quantity(i)
+                        return
             self.consumableInv.append(item)
         elif title == "BASIC":
+            if self.basicInv is not None:
+                for i in self.basicInv:
+                    if i["itemID"] == item["itemID"]:
+                        i["quantity"] = i["quantity"] + 1
+                        if i["itemID"] == self.selected_item_ID:
+                            self.refresh_item_quantity(i)
+                        return
             self.basicInv.append(item)
         
         print(item)
@@ -259,6 +290,11 @@ class AppState(rx.State):
 
         print(item)
 
+    def refresh_item_quantity(self, item):
+        # Exclusively for refreshing item quantity in the case of changes.
+        
+        self.infoQuantity = str(item["quantity"])
+
 class AddCustomItemState(AppState):
     """The current state of the user trying to add a custom item and all the fields to keep track of."""
 
@@ -273,6 +309,7 @@ class AddCustomItemState(AppState):
     def create_basic_item(self):
         item = Item(
             name=self.name,
+            itemID=self.nextCustomID,
             rarity=self.rarity,
             weight=self.weight,
             value=self.value,
@@ -281,7 +318,7 @@ class AddCustomItemState(AppState):
             quantity=self.quantity,
             type = "basic"
         )
-
+        self.nextCustomID = self.nextCustomID + 1
         print("Adding basic item")
 
         self.add_item_to_inv(title="BASIC", item=item)
@@ -291,6 +328,7 @@ class AddCustomItemState(AppState):
     def create_consumable_item(self):
         item = Item(
             name=self.name,
+            itemID=self.nextCustomID,
             rarity=self.rarity,
             weight=self.weight,
             value=self.value,
@@ -301,6 +339,7 @@ class AddCustomItemState(AppState):
         )
 
         print("Adding consumable item")
+        self.nextCustomID = self.nextCustomID + 1
 
         self.add_item_to_inv(title="CONSUMABLES", item=item)
         self.dialog_open = False
@@ -323,6 +362,7 @@ class AddCustomWeaponState(AppState):
     def create_weapon(self):
         weapon = Weapon(
             name=self.name,
+            itemID=self.nextCustomID,
             martial=self.martial,
             damage=self.damage,
             damageType=self.damageType,
@@ -334,6 +374,7 @@ class AddCustomWeaponState(AppState):
             quantity=self.quantity,
             type="weapon"
         )
+        self.nextCustomID = self.nextCustomID + 1
 
         self.add_item_to_inv(title="WEAPONS", item=weapon)
         self.dialog_open = False
@@ -354,6 +395,7 @@ class AddCustomArmorState(AppState):
     def create_armor(self):
         armor = Armor(
             name=self.name,
+            itemID=self.nextCustomID,
             weightClass=self.weightClass,
             AC=self.AC,
             rarity=self.rarity,
@@ -363,7 +405,7 @@ class AddCustomArmorState(AppState):
             quantity=self.quantity,
             type="armor"
         )
-
+        self.nextCustomID = self.nextCustomID + 1
         self.add_item_to_inv(title="ARMOR", item=armor)
         self.dialog_open = False
         self = AddCustomArmorState
