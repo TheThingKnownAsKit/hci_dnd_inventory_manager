@@ -15,6 +15,7 @@ class Item(TypedDict):
     category: NotRequired[str]
     description: NotRequired[str]
     quantity: int
+    type: str
 
 
 class Weapon(TypedDict):
@@ -28,6 +29,7 @@ class Weapon(TypedDict):
     value: NotRequired[str]
     description: NotRequired[str]
     quantity: int
+    type: str
 
 
 class Armor(TypedDict):
@@ -39,6 +41,7 @@ class Armor(TypedDict):
     value: NotRequired[str]
     description: NotRequired[str]
     quantity: int
+    type: str
 
 
 
@@ -57,6 +60,10 @@ class AppState(rx.State):
     character_sp: int = 0
     character_cp: int = 0
     level: int = 1
+    infoHeader: str = ""
+    infoSubheader: str = ""
+    infoBlock: str = ""
+    infoQuantity: str = ""
     stats: list[Stat] = [
         {"name": "STR", "value": 10, "bg_class": "bg-purple-400"},
         {"name": "DEX", "value": 12, "bg_class": "bg-purple-500"},
@@ -93,6 +100,7 @@ class AppState(rx.State):
             "category": "potion",
             "description": "You regain 2d4+2 hit points when you drink this potion. Drinking or administering a potion takes an action.",
             "quantity": 3,
+            "type": "basic",
         },
         {
             "name": "Arrow",
@@ -102,6 +110,7 @@ class AppState(rx.State):
             "category": "ammunition",
             "description": "You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack. At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield.",
             "quantity": 20,
+            "type": "basic",
         },
     ]
 
@@ -114,6 +123,7 @@ class AppState(rx.State):
             "category": "tool",
             "description": "A standard set of dice. If you are proficient with this gaming set, you may add your proficiency bonus to any ability checks made to play with this gaming set.",
             "quantity": 1,
+            "type": "basic",
         },
         {
             "name": "Thieves' Tools",
@@ -123,6 +133,7 @@ class AppState(rx.State):
             "category": "tool",
             "description": "This set of tools includes a small file, a set of lock picks, a small mirror mounted on a metal handle, a set of narrow-bladed scissors, and a pair of pliers. Proficiency with these tools lets you add your proficiency bonus to any ability checks you make to disarm traps or open locks.",
             "quantity": 1,
+            "type": "basic",
         },
     ]
 
@@ -138,6 +149,7 @@ class AppState(rx.State):
             "value": "10 GP",
             "description": "A light, easy to use shortsword.",
             "quantity": 1,
+            "type": "weapon",
         },
         {
             "name": "Quarterstaff",
@@ -150,6 +162,7 @@ class AppState(rx.State):
             "value": "2 SP",
             "description": "A simple staff.",
             "quantity": 1,
+            "type": "weapon",
         },
     ]
 
@@ -163,6 +176,7 @@ class AppState(rx.State):
             "value": "10 GP",
             "description": "A set of sturdy leather armor.",
             "quantity": 1,
+            "type": "armor",
         },
         {
             "name": "Plate Armor",
@@ -173,6 +187,7 @@ class AppState(rx.State):
             "value": "1500 GP",
             "description": "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body. Imposes disadvantage on Stealth rolls while worn, and requires a minimum Strength score of 15 to wear.",
             "quantity": 1,
+            "type": "armor",
         },
     ]
 
@@ -187,6 +202,32 @@ class AppState(rx.State):
         elif title == "BASIC":
             self.basicInv.append(item)
         
+        print(item)
+
+    def check_item_information(self, item):
+        self.infoHeader: str = ""
+        self.infoSubheader: str = ""
+        self.infoBlock: str = ""
+        self.infoQuantity: str = ""
+        if item["type"] == "basic":
+            self.infoHeader = item["name"]
+            self.infoSubheader = item["category"]
+            self.infoBlock = "Category: " + item["category"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
+            self.infoQuantity = str(item["quantity"])
+        elif item["type"] == "weapon":
+            self.infoHeader = item["name"]
+            if item["martial"] == "True":
+                self.infoSubheader = "martial weapon"
+            elif item["martial"] == "False":
+                self.infoSubheader = "simple weapon"
+            self.infoBlock = "Damage: " + item["damage"] + "\nDamage Type: " + item["damageType"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nProperties: " + item["tags"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
+            self.infoQuantity = str(item["quantity"])
+        elif item["type"] == "armor":
+            self.infoHeader = item["name"]
+            self.infoSubheader = item["weightClass"] + " armor"
+            self.infoBlock = "AC: " + item["AC"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
+            self.infoQuantity = str(item["quantity"])
+
         print(item)
 
 class AddCustomItemState(AppState):
@@ -208,7 +249,8 @@ class AddCustomItemState(AppState):
             value=self.value,
             category=self.category,
             description=self.description,
-            quantity=self.quantity
+            quantity=self.quantity,
+            type = "basic"
         )
 
         print("Adding basic item")
@@ -225,7 +267,8 @@ class AddCustomItemState(AppState):
             value=self.value,
             category=self.category,
             description=self.description,
-            quantity=self.quantity
+            quantity=self.quantity,
+            type="basic"
         )
 
         print("Adding consumable item")
@@ -259,7 +302,8 @@ class AddCustomWeaponState(AppState):
             weight=self.weight,
             value=self.value,
             description=self.description,
-            quantity=self.quantity
+            quantity=self.quantity,
+            type="weapon"
         )
 
         self.add_item_to_inv(title="WEAPONS", item=weapon)
@@ -287,7 +331,8 @@ class AddCustomArmorState(AppState):
             weight=self.weight,
             value=self.value,
             description=self.description,
-            quantity=self.quantity
+            quantity=self.quantity,
+            type="armor"
         )
 
         self.add_item_to_inv(title="ARMOR", item=armor)

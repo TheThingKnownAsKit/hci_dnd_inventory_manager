@@ -248,12 +248,12 @@ def inventory_container(title: str, color: str) -> rx.Component:
     return rx.el.div(
         _container_header(title, color),
         _item_container_subheader(title=title),
-        rx.scroll_area( # This is the list of premade items to add
+        rx.scroll_area( # This is the list of items in the inventory
             rx.el.div(    
                 rx.foreach(
                     get_current_inv()[title],
                     lambda item: rx.el.div(
-                        rx.el.button(
+                        rx.el.button( # The button
                             rx.box(width="50px", height="50px", aspect_ratio=1, background="center/cover url('/potion.jpg')"),
                             rx.text(item["name"],
                                     style={
@@ -265,7 +265,7 @@ def inventory_container(title: str, color: str) -> rx.Component:
                                         "wordBreak": "break-word"
                                     }),
                             class_name="flex flex-col justify-end items-center flex-grow p-1 bg-gray-300 border-2 border-black rounded font-bold text-black tracking-wide",
-                            on_click=lambda: AppState.add_item_to_inv(title, item), # type: ignore
+                            on_click=lambda: AppState.check_item_information(item=item)
                         ),
                         class_name="p-2 border-b border-gray-300"
                     )
@@ -455,6 +455,18 @@ def character_sheet() -> rx.Component:
 def information_container() -> rx.Component:
     return rx.el.div(
         _container_header("INFORMATION", "bg-yellow-400"),
-        rx.el.div(class_name="flex-grow p-4 bg-yellow-50"),
+        rx.el.div(
+            rx.text(AppState.infoHeader, class_name="text-xl font-bold"),
+            rx.text(AppState.infoSubheader, class_name="text-sm italic"),
+            rx.text(AppState.infoBlock),
+            rx.text(AppState.infoQuantity, class_name="text-xl"),
+            style={
+                "whiteSpace": "pre-line",
+                "overflowY": "auto",
+                "maxHeight": "400px",
+                "padding": "1rem",
+                "text_wrap": "wrap",
+            },
+            class_name="flex-grow p-4 bg-yellow-50"),
         class_name="flex flex-col border-2 border-black rounded-lg w-full h-full shadow-md",
     )
