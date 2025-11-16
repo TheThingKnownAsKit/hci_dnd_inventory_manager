@@ -52,6 +52,7 @@ class AppState(rx.State):
     """The app state."""
     dialog_open: bool = False
     selected_item_ID: int = 0
+    selected_item_type: str = ""
     nextCustomID: int = 9000
 
     character_name: str = "CHARACTER NAME"
@@ -112,8 +113,8 @@ class AppState(rx.State):
             "value": "50 GP",
             "category": "potion",
             "description": "You regain 2d4+2 hit points when you drink this potion. Drinking or administering a potion takes an action.",
-            "quantity": 3,
-            "type": "basic",
+            "quantity": 1,
+            "type": "consumable",
         },
         {
             "name": "Arrow",
@@ -123,8 +124,8 @@ class AppState(rx.State):
             "value": "10 CP",
             "category": "ammunition",
             "description": "You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack. At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield.",
-            "quantity": 20,
-            "type": "basic",
+            "quantity": 1,
+            "type": "consumable",
         },
     ]
 
@@ -253,6 +254,76 @@ class AppState(rx.State):
         
         print(item)
 
+    def iterate_quantity_up(self):
+        workingItem = self.selected_item_ID
+        workingType = self.selected_item_type
+
+        if workingType == "basic":
+            workingList = self.basicInv
+        elif workingType == "consumable":
+            workingList = self.consumableInv
+        elif workingType == "weapon":
+            workingList = self.weaponInv
+        elif workingType == "armor":
+            workingList = self.armorInv
+
+        for i in workingList:
+                    if i["itemID"] == workingItem:
+                        i["quantity"] = i["quantity"] + 1
+                        self.refresh_item_quantity(i)
+        
+
+    def iterate_quantity_down(self):
+        workingItem = self.selected_item_ID
+        workingType = self.selected_item_type
+
+        if workingType == "basic":
+            workingList = self.basicInv
+        elif workingType == "consumable":
+            workingList = self.consumableInv
+        elif workingType == "weapon":
+            workingList = self.weaponInv
+        elif workingType == "armor":
+            workingList = self.armorInv
+
+        for i in workingList:
+                    if i["itemID"] == workingItem:
+                        i["quantity"] = i["quantity"] - 1
+                        if i["quantity"] <= 0:
+                            self.remove_item()
+                            return
+                        self.refresh_item_quantity(i)
+
+    def remove_item(self):
+        workingItem = self.selected_item_ID
+        workingType = self.selected_item_type
+
+        if workingType == "basic":
+            workingList = self.basicInv
+        elif workingType == "consumable":
+            workingList = self.consumableInv
+        elif workingType == "weapon":
+            workingList = self.weaponInv
+        elif workingType == "armor":
+            workingList = self.armorInv
+
+        j = 0
+        for i in workingList:
+                    
+                    if i["itemID"] == workingItem:
+                        workingList.pop(j)
+                    j = j+1
+
+        self.selected_item_ID = 0
+        self.selected_item_type = ""
+        self.infoHeader = "No Item Selected"
+        self.infoSubheader = ""
+        self.infoBlock = ""
+        self.infoQuantity = ""
+        return
+
+
+
     def check_item_information(self, item):
         item_id = item["itemID"]
 
@@ -260,6 +331,7 @@ class AppState(rx.State):
         if self.selected_item_ID == item_id:
             # Clicking the same item again → clear info
             self.selected_item_ID = 0
+            self.selected_item_type = ""
             self.infoHeader = "No Item Selected"
             self.infoSubheader = ""
             self.infoBlock = ""
@@ -268,32 +340,33 @@ class AppState(rx.State):
 
         # Otherwise → show the new item
         self.selected_item_ID = item_id
+        self.selected_item_type = item["type"]
 
-        if item["type"] == "basic":
+        if item["type"] == "basic" or item["type"] == "consumable":
             self.infoHeader = item["name"]
             self.infoSubheader = item["category"]
-            self.infoBlock = "Category: " + item["category"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
-            self.infoQuantity = str(item["quantity"])
+            self.infoBlock = "Category: " + item["category"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"] + "\n\n"
+            self.infoQuantity = "Quantity: " + str(item["quantity"])
         elif item["type"] == "weapon":
             self.infoHeader = item["name"]
             if item["martial"] == "True":
                 self.infoSubheader = "martial weapon"
             elif item["martial"] == "False":
                 self.infoSubheader = "simple weapon"
-            self.infoBlock = "Damage: " + item["damage"] + "\nDamage Type: " + item["damageType"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nProperties: " + item["tags"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
-            self.infoQuantity = str(item["quantity"])
+            self.infoBlock = "Damage: " + item["damage"] + "\nDamage Type: " + item["damageType"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nProperties: " + item["tags"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"] + "\n\n"
+            self.infoQuantity = "Quantity: " + str(item["quantity"])
         elif item["type"] == "armor":
             self.infoHeader = item["name"]
             self.infoSubheader = item["weightClass"] + " armor"
-            self.infoBlock = "AC: " + item["AC"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"]
-            self.infoQuantity = str(item["quantity"])
+            self.infoBlock = "AC: " + item["AC"] + "\nRarity: " + item["rarity"] + "\nValue: " + item["value"] + "\nWeight: " + item["weight"] + "\n\n" + item["description"] + "\n\n"
+            self.infoQuantity = "Quantity: " + str(item["quantity"])
 
         print(item)
 
     def refresh_item_quantity(self, item):
         # Exclusively for refreshing item quantity in the case of changes.
         
-        self.infoQuantity = str(item["quantity"])
+        self.infoQuantity = "Quantity: " + str(item["quantity"])
 
 class AddCustomItemState(AppState):
     """The current state of the user trying to add a custom item and all the fields to keep track of."""
@@ -307,6 +380,9 @@ class AddCustomItemState(AppState):
     quantity: int
 
     def create_basic_item(self):
+        usedQuant = 1
+        if self.quantity >= 1:
+                usedQuant=self.quantity
         item = Item(
             name=self.name,
             itemID=self.nextCustomID,
@@ -315,7 +391,7 @@ class AddCustomItemState(AppState):
             value=self.value,
             category=self.category,
             description=self.description,
-            quantity=self.quantity,
+            quantity=usedQuant,
             type = "basic"
         )
         self.nextCustomID = self.nextCustomID + 1
@@ -323,9 +399,18 @@ class AddCustomItemState(AppState):
 
         self.add_item_to_inv(title="BASIC", item=item)
         self.dialog_open = False
-        self = AddCustomItemState
+        self.name = ""
+        self.rarity = ""
+        self.weight = ""
+        self.value = ""
+        self.category = ""
+        self.description = ""
+        self.quantity = 1
     
     def create_consumable_item(self):
+        usedQuant = 1
+        if self.quantity >= 1:
+                usedQuant=self.quantity
         item = Item(
             name=self.name,
             itemID=self.nextCustomID,
@@ -334,8 +419,8 @@ class AddCustomItemState(AppState):
             value=self.value,
             category=self.category,
             description=self.description,
-            quantity=self.quantity,
-            type="basic"
+            quantity=usedQuant,
+            type="consumable"
         )
 
         print("Adding consumable item")
@@ -343,7 +428,13 @@ class AddCustomItemState(AppState):
 
         self.add_item_to_inv(title="CONSUMABLES", item=item)
         self.dialog_open = False
-        self = AddCustomItemState
+        self.name = ""
+        self.rarity = ""
+        self.weight = ""
+        self.value = ""
+        self.category = ""
+        self.description = ""
+        self.quantity = 1
 
 class AddCustomWeaponState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
@@ -360,6 +451,9 @@ class AddCustomWeaponState(AppState):
     quantity: int
 
     def create_weapon(self):
+        usedQuant = 1
+        if self.quantity >= 1:
+                usedQuant=self.quantity
         weapon = Weapon(
             name=self.name,
             itemID=self.nextCustomID,
@@ -371,14 +465,23 @@ class AddCustomWeaponState(AppState):
             weight=self.weight,
             value=self.value,
             description=self.description,
-            quantity=self.quantity,
+            quantity=usedQuant,
             type="weapon"
         )
         self.nextCustomID = self.nextCustomID + 1
 
         self.add_item_to_inv(title="WEAPONS", item=weapon)
         self.dialog_open = False
-        self = AddCustomWeaponState
+        self.name = ""
+        self.martial = ""
+        self.damage = ""
+        self.damageType = ""
+        self.rarity = ""
+        self.tags = ""
+        self.weight = ""
+        self.value = ""
+        self.description = ""
+        self.quantity = 1
 
 class AddCustomArmorState(AppState):
     """The current state of the user trying to add a custom weapon and all the fields to keep track of."""
@@ -393,6 +496,9 @@ class AddCustomArmorState(AppState):
     quantity: int
 
     def create_armor(self):
+        usedQuant = 1
+        if self.quantity >= 1:
+                usedQuant=self.quantity
         armor = Armor(
             name=self.name,
             itemID=self.nextCustomID,
@@ -402,10 +508,17 @@ class AddCustomArmorState(AppState):
             weight=self.weight,
             value=self.value,
             description=self.description,
-            quantity=self.quantity,
+            quantity=usedQuant,
             type="armor"
         )
         self.nextCustomID = self.nextCustomID + 1
         self.add_item_to_inv(title="ARMOR", item=armor)
         self.dialog_open = False
-        self = AddCustomArmorState
+        self.name = ""
+        self.weightClass = ""
+        self.AC = ""
+        self.rarity = ""
+        self.weight = ""
+        self.value = ""
+        self.description = ""
+        self.quantity = 1

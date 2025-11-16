@@ -464,8 +464,43 @@ def information_container() -> rx.Component:
         rx.el.div(
             rx.text(AppState.infoHeader, class_name="text-xl font-bold"),
             rx.text(AppState.infoSubheader, class_name="text-sm italic"),
-            rx.text(AppState.infoBlock),
-            rx.text(AppState.infoQuantity, class_name="text-xl"),
+            rx.text(AppState.infoBlock, class_name="text-base"),
+            rx.text(AppState.infoQuantity, class_name="text-lgbase font-bold"),
+            rx.cond(
+                ~(AppState.selected_item_ID == 0),
+                rx.button(
+                    "Add One", 
+                    on_click=lambda: (
+
+                        AppState.iterate_quantity_up
+
+                    ),
+                    class_name="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mr-1 mt-1"
+                ),
+            ),
+            rx.cond(
+                ~(AppState.selected_item_ID == 0),
+                rx.button(
+                    "Remove One", 
+                    on_click=lambda: (
+
+                        AppState.iterate_quantity_down
+
+                    ),
+                    class_name="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-1 mt-1"
+                ),
+            ),rx.cond(
+                ~(AppState.selected_item_ID == 0),
+                rx.button(
+                    "Delete Item", 
+                    on_click=lambda: (
+
+                        AppState.remove_item
+
+                    ),
+                    class_name="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 mr-1 mt-1"
+                )
+            ),
             style={
                 "whiteSpace": "pre-line",
                 "overflowY": "auto",
