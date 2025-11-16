@@ -46,9 +46,9 @@ def _item_container_subheader(title: str) -> rx.Component:
             rx.dialog.root( # This is the add custom items dialog popup
                 rx.dialog.trigger(
                     rx.el.button(f"Add Custom {title}",
-                        class_name="flex items-center text-sm font-semibold text-gray-700",
+                        class_name="text-left w-full",
                     ),
-                    class_name="p-2 border-b-2 border-black bg-gray-200",
+                    class_name="w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-green-100",
                 ),
                 rx.dialog.content(
                     f"Add Custom {title}",
@@ -237,14 +237,14 @@ def _item_container_subheader(title: str) -> rx.Component:
                         class_name=rx.cond(
                             (i % 2) == 0,
                             # if even
-                            "w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-gray-400",
-                            # if odd
                             "w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-gray-200",
+                            # if odd
+                            "w-full flex items-center px-3 py-2 border-b-2 border-black font-bold text-black text-sm tracking-wide bg-gray-400",
                         ),
                         on_click=lambda: AppState.add_item_to_inv(title, item),
                     )
                 ),
-                class_name="flex-grow p-2"
+                class_name="flex-grow py-2"
             ),
         ),
     )
