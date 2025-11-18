@@ -36,3 +36,6 @@ Note that this project really doesn't like to work on any browser that isn't Chr
    
 4) Check the information of the “Potion of Healing” in the inventory.
 5) Use a “Potion of Healing”.
+
+## Extra Credit Argument
+At the start of this project we decided that we were going to limit our scope to ONLY managing items and inventory to keep the assignment achievable. However, we received a lot of feedback that players were either confused about this concept or did not think it was as useful as a full character sheet. Because of this, we decided to put in the extra effort to make the character sheet have more information and make it functional as a full sheet, not just an inventory management system. Players can put in details about their character such as class, level, name, etc, as well as their specific stats. We put in this extra effort in an attempt to make a better and more intuitive product for users and we think that is deserving of extra credit.
